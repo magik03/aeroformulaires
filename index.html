@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AéroFormulaires — Portail officiel des documents</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy:    #0a1628;
+    --navy2:   #0f2040;
+    --navy3:   #162035;
+    --gold:    #c8a96e;
+    --gold2:   #e8c98e;
+    --cream:   #f5f0e8;
+    --muted:   #8a8070;
+    --danger:  #e24b4a;
+    --danger-bg: rgba(226,75,74,0.10);
+    --danger-bd: rgba(226,75,74,0.22);
+    --bdr:     rgba(200,169,110,0.20);
+    --bdr2:    rgba(200,169,110,0.40);
+    --radius:  12px;
+    --gold-bg: rgba(200,169,110,0.10);
+  }
+
+  body {
+    background: var(--navy);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    font-size: 16px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy2);
+    border-bottom: 1px solid var(--bdr);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .h-inner {
+    max-width: 1120px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 66px; padding: 0 2rem;
+  }
+  .logo { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+  .logo-ico {
+    width: 38px; height: 38px; background: var(--gold);
+    border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .logo-ico svg { width: 22px; height: 22px; fill: var(--navy); }
+  .logo-name { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--cream); display: block; }
+  .logo-sub  { font-size: 0.62rem; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-top: -1px; }
+  nav { display: flex; align-items: center; gap: 0.2rem; }
+  .nav-link {
+    color: var(--muted); font-size: 0.84rem; text-decoration: none;
+    padding: 6px 14px; border-radius: 7px; transition: all 0.2s; border: none;
+    background: transparent; cursor: pointer; font-family: inherit;
+  }
+  .nav-link:hover { color: var(--cream); background: rgba(255,255,255,0.04); }
+  .nav-link.active { color: var(--cream); background: rgba(200,169,110,0.10); }
+  .nav-admin {
+    margin-left: 0.6rem;
+    background: var(--gold-bg); border: 1px solid var(--bdr);
+    border-radius: 7px; padding: 6px 14px; color: var(--gold);
+    font-size: 0.78rem; cursor: pointer; font-family: inherit;
+    transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+  }
+  .nav-admin:hover { background: rgba(200,169,110,0.18); }
+  .nav-admin.on { background: rgba(200,169,110,0.20); border-color: var(--gold); }
+
+  /* ── PAGES ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--navy2);
+    border-bottom: 1px solid var(--bdr);
+    padding: 4rem 2rem 3rem; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 400px;
+    background: radial-gradient(ellipse, rgba(200,169,110,0.07) 0%, transparent 68%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--gold-bg); border: 1px solid var(--bdr);
+    border-radius: 20px; padding: 5px 14px;
+    font-size: 0.72rem; color: var(--gold); letter-spacing: 0.11em; text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    line-height: 1.18; margin-bottom: 0.8rem; color: var(--cream);
+  }
+  .hero h1 em { color: var(--gold); font-style: normal; }
+  .hero p { color: var(--muted); font-size: 1rem; max-width: 540px; margin: 0 auto 2rem; line-height: 1.75; }
+  .search-wrap { max-width: 460px; margin: 0 auto; position: relative; }
+  .search-wrap input {
+    width: 100%; background: rgba(255,255,255,0.05);
+    border: 1px solid var(--bdr); border-radius: 28px;
+    padding: 11px 44px 11px 20px; color: var(--cream);
+    font-family: inherit; font-size: 0.9rem; outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .search-wrap input:focus { border-color: var(--gold); }
+  .search-ico {
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    width: 17px; height: 17px; fill: none; stroke: var(--muted); stroke-width: 2; pointer-events: none;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main { max-width: 1120px; margin: 0 auto; padding: 2.5rem 2rem 3rem; }
+
+  /* ── FILTERS ── */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 2rem; }
+  .fb {
+    background: transparent; border: 1px solid var(--bdr);
+    border-radius: 20px; padding: 7px 16px;
+    color: var(--muted); font-size: 0.79rem; cursor: pointer;
+    font-family: inherit; transition: all 0.2s; letter-spacing: 0.03em;
+  }
+  .fb:hover { border-color: var(--bdr2); color: var(--cream); }
+  .fb.on { background: var(--gold-bg); border-color: var(--gold); color: var(--gold); }
+
+  /* ── SECTION TITLE ── */
+  .sec-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem; color: var(--cream);
+    margin-bottom: 1.4rem; display: flex; align-items: center; gap: 14px;
+  }
+  .sec-title::after { content: ''; flex: 1; height: 1px; background: var(--bdr); }
+
+  /* ── GRID ── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.1rem; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--navy2); border: 1px solid var(--bdr);
+    border-radius: var(--radius); padding: 1.3rem;
+    cursor: pointer; transition: border-color 0.22s, transform 0.22s;
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.22s;
+  }
+  .card:hover { border-color: var(--bdr2); transform: translateY(-2px); }
+  .card:hover::before { transform: scaleX(1); }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; }
+  .card-ico {
+    width: 42px; height: 42px; background: var(--gold-bg);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .card-ico svg { width: 20px; height: 20px; fill: none; stroke: var(--gold); stroke-width: 1.8; }
+  .badge {
+    font-size: 0.68rem; padding: 3px 10px; border-radius: 10px;
+    letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid;
+  }
+  .badge-gold { background: var(--gold-bg); color: var(--gold); border-color: rgba(200,169,110,0.25); }
+  .badge-blue { background: rgba(55,138,221,0.10); color: #7ab8f5; border-color: rgba(55,138,221,0.22); }
+  .badge-green{ background: rgba(99,153,34,0.10); color: #a8d46a; border-color: rgba(99,153,34,0.22); }
+  .card h3 { font-size: 0.92rem; font-weight: 500; color: var(--cream); margin-bottom: 0.4rem; line-height: 1.42; }
+  .card p  { font-size: 0.79rem; color: var(--muted); line-height: 1.55; flex: 1; }
+  .card-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--bdr);
+  }
+  .card-open { display: flex; align-items: center; gap: 5px; font-size: 0.79rem; color: var(--gold); }
+  .card-open svg { width: 13px; height: 13px; fill: none; stroke: var(--gold); stroke-width: 2.2; transition: transform 0.2s; }
+  .card:hover .card-open svg { transform: translateX(3px); }
+  .card-size { font-size: 0.7rem; color: var(--muted); }
+
+  /* ── VIEWER ── */
+  #viewerSection { display: none; margin-bottom: 2.5rem; }
+  #viewerSection.open { display: block; }
+  .viewer-box {
+    background: var(--navy2); border: 1px solid var(--bdr);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .viewer-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.4rem; border-bottom: 1px solid var(--bdr); gap: 1rem;
+  }
+  .viewer-info { flex: 1; min-width: 0; }
+  .viewer-title { font-weight: 500; font-size: 1rem; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .viewer-meta  { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
+  .viewer-btns  { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .vbtn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 8px;
+    font-family: inherit; font-size: 0.8rem; cursor: pointer; border: none; transition: all 0.2s;
+  }
+  .vbtn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
+  .vbtn-primary { background: var(--gold); color: var(--navy); font-weight: 500; }
+  .vbtn-primary:hover { opacity: 0.88; }
+  .vbtn-outline { background: transparent; border: 1px solid var(--bdr); color: var(--cream); }
+  .vbtn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .vbtn-close {
+    width: 34px; height: 34px; padding: 0; justify-content: center;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--bdr); color: var(--muted); font-size: 1rem;
+  }
+  .vbtn-close:hover { border-color: var(--gold); color: var(--cream); }
+  #pdfViewer { width: 100%; height: 600px; border: none; display: block; background: #fff; }
+
+  /* ── EMPTY ── */
+  .empty {
+    grid-column: 1/-1; text-align: center; padding: 4rem 2rem;
+    color: var(--muted); font-size: 0.9rem; line-height: 1.8;
+  }
+  .empty svg { width: 44px; height: 44px; fill: none; stroke: var(--muted); stroke-width: 1.4; margin-bottom: 1rem; opacity: 0.5; }
+
+  /* ── ADMIN PAGE ── */
+  .admin-wrap { max-width: 1120px; margin: 0 auto; padding: 2.5rem 2rem 3rem; }
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card {
+    background: var(--navy2); border: 1px solid var(--bdr);
+    border-radius: var(--radius); padding: 1.2rem; text-align: center;
+  }
+  .stat-n { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--gold); }
+  .stat-l { font-size: 0.74rem; color: var(--muted); margin-top: 4px; }
+
+  .upload-panel {
+    background: var(--navy3); border: 1px solid var(--bdr);
+    border-radius: var(--radius); padding: 2rem; margin-bottom: 2.5rem;
+  }
+  .upload-panel h2 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 1.6rem; color: var(--cream); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem; }
+  .form-grid.full { grid-template-columns: 1fr; }
+  .field label { display: block; font-size: 0.77rem; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.04em; }
+  .field input[type=text],
+  .field select,
+  .field textarea {
+    width: 100%; background: rgba(255,255,255,0.05);
+    border: 1px solid var(--bdr); border-radius: 8px;
+    padding: 10px 13px; color: var(--cream);
+    font-family: inherit; font-size: 0.87rem; outline: none;
+    transition: border-color 0.2s;
+  }
+  .field input[type=text]:focus,
+  .field select:focus,
+  .field textarea:focus { border-color: var(--gold); }
+  .field select option { background: var(--navy2); color: var(--cream); }
+  .field textarea { resize: vertical; min-height: 80px; }
+
+  .drop-zone {
+    border: 1.5px dashed rgba(200,169,110,0.30); border-radius: var(--radius);
+    padding: 2.2rem; text-align: center; position: relative;
+    cursor: pointer; transition: all 0.22s;
+  }
+  .drop-zone:hover, .drop-zone.drag { border-color: var(--gold); background: rgba(200,169,110,0.04); }
+  .drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .drop-zone svg { width: 36px; height: 36px; fill: none; stroke: var(--gold); stroke-width: 1.4; margin-bottom: 0.7rem; }
+  .drop-zone p   { font-size: 0.86rem; color: var(--muted); }
+  .drop-zone .fname { font-size: 0.8rem; color: var(--gold); font-weight: 500; margin-top: 0.5rem; }
+
+  .prog-bar { height: 4px; background: rgba(200,169,110,0.12); border-radius: 2px; margin-top: 1rem; overflow: hidden; display: none; }
+  .prog-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; border-radius: 2px; }
+
+  .btn-add {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--gold); color: var(--navy); border: none;
+    border-radius: 9px; padding: 11px 26px;
+    font-family: inherit; font-size: 0.87rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; margin-top: 1.2rem;
+  }
+  .btn-add:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-add svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+  .btn-add:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  /* admin card actions */
+  .card-del {
+    background: var(--danger-bg); border: 1px solid var(--danger-bd);
+    border-radius: 6px; padding: 4px 11px;
+    color: #f09595; font-size: 0.72rem; cursor: pointer;
+    font-family: inherit; transition: all 0.2s;
+  }
+  .card-del:hover { background: rgba(226,75,74,0.2); }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed; bottom: 1.6rem; right: 1.6rem;
+    background: var(--navy2); border: 1px solid var(--gold);
+    border-radius: 10px; padding: 12px 20px;
+    font-size: 0.83rem; color: var(--cream);
+    z-index: 999; transform: translateY(70px); opacity: 0;
+    transition: all 0.3s; pointer-events: none; max-width: 320px;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--bdr); padding: 1.8rem 2rem;
+    text-align: center; color: var(--muted); font-size: 0.78rem;
+  }
+  footer span { color: var(--gold); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .hero h1   { font-size: 1.7rem; }
+    .h-inner   { padding: 0 1rem; }
+    .nav-admin span { display: none; }
+    .main, .admin-wrap { padding: 1.5rem 1rem 2rem; }
+  }
+  @media (max-width: 460px) {
+    .viewer-btns .vbtn-outline { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="h-inner">
+    <a class="logo" href="#" onclick="showPage('home');return false;">
+      <div class="logo-ico">
+        <svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+      </div>
+      <div>
+        <span class="logo-name">AéroFormulaires</span>
+        <span class="logo-sub">Portail officiel des documents</span>
+      </div>
+    </a>
+    <nav>
+      <button class="nav-link active" id="navHome" onclick="showPage('home')">Formulaires</button>
+      <button class="nav-link" id="navAdmin" onclick="showPage('admin')">Administration</button>
+      <button class="nav-admin" id="adminToggle" onclick="toggleAdminMode()" title="Activer le mode suppression">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+        <span>Mode admin</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- HOME PAGE -->
+<div class="page active" id="homePage">
+  <div class="hero">
+    <div class="hero-badge">
+      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Documents officiels — Accès rapide
+    </div>
+    <h1>Tous vos <em>formulaires</em><br>aéroportuaires</h1>
+    <p>Consultez, remplissez et imprimez tous les formulaires officiels directement depuis votre navigateur — sans téléchargement requis.</p>
+    <div class="search-wrap">
+      <input type="text" id="searchIn" placeholder="Rechercher un formulaire..." oninput="render()">
+      <svg class="search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- PDF VIEWER -->
+    <div id="viewerSection">
+      <div class="viewer-box">
+        <div class="viewer-header">
+          <div class="viewer-info">
+            <div class="viewer-title" id="viewerTitle">Formulaire</div>
+            <div class="viewer-meta" id="viewerMeta"></div>
+          </div>
+          <div class="viewer-btns">
+            <button class="vbtn vbtn-outline" onclick="downloadCurrent()">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Télécharger
+            </button>
+            <button class="vbtn vbtn-primary" onclick="printCurrent()">
+              <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Imprimer
+            </button>
+            <button class="vbtn vbtn-close" onclick="closeViewer()">✕</button>
+          </div>
+        </div>
+        <iframe id="pdfViewer" title="Aperçu du formulaire PDF"></iframe>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters">
+      <button class="fb on" onclick="setFilter('all', this)">Tous les formulaires</button>
+      <button class="fb" onclick="setFilter('discharge', this)">Décharge adulte</button>
+      <button class="fb" onclick="setFilter('infant', this)">Nourrisson / Bébé</button>
+      <button class="fb" onclick="setFilter('transport', this)">Transport enfant</button>
+      <button class="fb" onclick="setFilter('airport', this)">Aéroport général</button>
+      <button class="fb" onclick="setFilter('autre', this)">Autre</button>
+    </div>
+
+    <div class="sec-title">Formulaires disponibles</div>
+    <div class="grid" id="formsGrid"></div>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div class="page" id="adminPage">
+  <div class="admin-wrap">
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="upload-panel">
+      <h2>Ajouter un nouveau formulaire</h2>
+      <div class="form-grid">
+        <div class="field">
+          <label>Titre du formulaire *</label>
+          <input type="text" id="fTitle" placeholder="Ex : Décharge de responsabilité adulte">
+        </div>
+        <div class="field">
+          <label>Catégorie *</label>
+          <select id="fCat">
+            <option value="discharge">Décharge adulte</option>
+            <option value="infant">Nourrisson / Bébé</option>
+            <option value="transport">Transport enfant</option>
+            <option value="airport">Aéroport général</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid full">
+        <div class="field">
+          <label>Description courte</label>
+          <textarea id="fDesc" placeholder="Description brève visible sur la carte..."></textarea>
+        </div>
+      </div>
+      <div class="form-grid full">
+        <div class="field">
+          <label>Fichier PDF *</label>
+          <div class="drop-zone" id="dropZone">
+            <input type="file" accept=".pdf" id="fileIn" onchange="handleFile(this)">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <p>Glissez votre PDF ici ou cliquez pour sélectionner</p>
+            <div class="fname" id="fileName"></div>
+          </div>
+          <div class="prog-bar" id="progBar"><div class="prog-fill" id="progFill"></div></div>
+        </div>
+      </div>
+      <button class="btn-add" id="btnAdd" onclick="addForm()">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Ajouter le formulaire
+      </button>
+    </div>
+
+    <div class="sec-title">Formulaires enregistrés</div>
+    <div class="grid" id="adminGrid"></div>
+  </div>
+</div>
+
+<footer>
+  AéroFormulaires &nbsp;·&nbsp; Tous droits réservés &nbsp;·&nbsp;
+  <span>Portail officiel des documents aéroportuaires</span>
+</footer>
+
+<script>
+// ── DATA ──────────────────────────────────────────────
+const STORE_META = 'aero_meta_v2';
+const STORE_PDF  = 'aero_pdf_';
+const CATS = { discharge:'Décharge', infant:'Nourrisson', transport:'Transport', airport:'Aéroport', autre:'Autre' };
+const BADGE_CLASS = { discharge:'badge-gold', infant:'badge-blue', transport:'badge-green', airport:'badge-gold', autre:'badge-gold' };
+
+let forms      = [];
+let curFilter  = 'all';
+let curForm    = null;
+let adminMode  = false;
+let pendingPdf = null;
+
+// ── STORAGE HELPERS ───────────────────────────────────
+function saveMeta() {
+  const slim = forms.map(({ id, title, desc, cat, date, size }) => ({ id, title, desc, cat, date, size }));
+  try { localStorage.setItem(STORE_META, JSON.stringify(slim)); } catch(e) { toast('⚠ Stockage local plein ou indisponible'); }
+}
+function loadMeta() {
+  try {
+    const raw = localStorage.getItem(STORE_META);
+    forms = raw ? JSON.parse(raw) : [];
+  } catch(e) { forms = []; }
+}
+function savePdf(id, dataUrl) {
+  try { localStorage.setItem(STORE_PDF + id, dataUrl); return true; }
+  catch(e) { toast('⚠ Fichier trop grand pour le stockage local (max ~5 Mo). Essayez un PDF plus léger.'); return false; }
+}
+function loadPdf(id) {
+  try { return localStorage.getItem(STORE_PDF + id); } catch(e) { return null; }
+}
+function deletePdf(id) {
+  try { localStorage.removeItem(STORE_PDF + id); } catch(e) {}
+}
+
+// ── RENDER HOME GRID ──────────────────────────────────
+function render() {
+  const q = (document.getElementById('searchIn').value || '').toLowerCase();
+  const list = forms.filter(f => {
+    const mc = curFilter === 'all' || f.cat === curFilter;
+    const ms = !q || f.title.toLowerCase().includes(q) || (f.desc||'').toLowerCase().includes(q);
+    return mc && ms;
+  });
+  const g = document.getElementById('formsGrid');
+  if (!list.length) {
+    g.innerHTML = `<div class="empty">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <br>Aucun formulaire trouvé.<br>
+      <span style="font-size:.82rem">Ajoutez-en depuis la page <strong>Administration</strong>.</span>
+    </div>`;
+    return;
+  }
+  g.innerHTML = list.map(f => `
+    <div class="card" onclick="openForm('${f.id}')">
+      <div class="card-top">
+        <div class="card-ico">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <span class="badge ${BADGE_CLASS[f.cat]||'badge-gold'}">${CATS[f.cat]||f.cat}</span>
+      </div>
+      <h3>${escHtml(f.title)}</h3>
+      <p>${escHtml(f.desc || 'Formulaire officiel — cliquez pour ouvrir et imprimer.')}</p>
+      <div class="card-foot">
+        <span class="card-open">
+          Ouvrir le formulaire
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+        <span class="card-size">${f.size ? f.size + ' Ko' : 'PDF'}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── RENDER ADMIN GRID ─────────────────────────────────
+function renderAdmin() {
+  const g = document.getElementById('adminGrid');
+  if (!forms.length) {
+    g.innerHTML = '<div class="empty">Aucun formulaire enregistré. Ajoutez-en ci-dessus.</div>';
+    return;
+  }
+  g.innerHTML = forms.map(f => `
+    <div class="card" style="cursor:default">
+      <div class="card-top">
+        <div class="card-ico">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <span class="badge ${BADGE_CLASS[f.cat]||'badge-gold'}">${CATS[f.cat]||f.cat}</span>
+      </div>
+      <h3>${escHtml(f.title)}</h3>
+      <p style="font-size:.75rem;color:var(--muted)">Ajouté le ${f.date||'—'} · ${f.size||'?'} Ko</p>
+      <div class="card-foot">
+        <button onclick="openForm('${f.id}')" style="background:transparent;border:none;color:var(--gold);font-size:.79rem;cursor:pointer;font-family:inherit;padding:0">
+          Prévisualiser →
+        </button>
+        <button class="card-del" onclick="deleteForm('${f.id}')">Supprimer</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderStats() {
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card"><div class="stat-n">${forms.length}</div><div class="stat-l">Formulaires total</div></div>
+    <div class="stat-card"><div class="stat-n">${forms.filter(f=>f.cat==='discharge'||f.cat==='infant').length}</div><div class="stat-l">Décharges</div></div>
+    <div class="stat-card"><div class="stat-n">${forms.filter(f=>f.cat==='transport').length}</div><div class="stat-l">Transport enfant</div></div>
+    <div class="stat-card"><div class="stat-n">${forms.filter(f=>f.cat==='airport'||f.cat==='autre').length}</div><div class="stat-l">Aéroport / Autre</div></div>
+  `;
+}
+
+// ── FILTER ────────────────────────────────────────────
+function setFilter(cat, btn) {
+  curFilter = cat;
+  document.querySelectorAll('.fb').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+}
+
+// ── FILE HANDLING ─────────────────────────────────────
+function handleFile(inp) {
+  const f = inp.files[0];
+  if (!f) return;
+  if (f.type !== 'application/pdf') { toast('Veuillez sélectionner un fichier PDF.'); return; }
+  if (f.size > 6 * 1024 * 1024) { toast('Fichier trop grand — maximum 6 Mo.'); inp.value=''; return; }
+  document.getElementById('fileName').textContent = f.name + '  (' + Math.round(f.size/1024) + ' Ko)';
+  const pb = document.getElementById('progBar');
+  const pf = document.getElementById('progFill');
+  pb.style.display = 'block'; pf.style.width = '0%';
+  const reader = new FileReader();
+  reader.onprogress = e => { if(e.lengthComputable) pf.style.width = Math.round(e.loaded/e.total*100)+'%'; };
+  reader.onload = e => {
+    pendingPdf = { dataUrl: e.target.result, name: f.name, size: Math.round(f.size/1024) };
+    pf.style.width = '100%';
+    toast('✓ PDF chargé — prêt à enregistrer.');
+  };
+  reader.onerror = () => toast('Erreur de lecture du fichier.');
+  reader.readAsDataURL(f);
+}
+
+// ── ADD FORM ──────────────────────────────────────────
+function addForm() {
+  const title = document.getElementById('fTitle').value.trim();
+  const cat   = document.getElementById('fCat').value;
+  const desc  = document.getElementById('fDesc').value.trim();
+  if (!title)      { toast('Veuillez saisir un titre.'); return; }
+  if (!pendingPdf) { toast('Veuillez sélectionner un PDF.'); return; }
+
+  const id = 'f_' + Date.now();
+  const ok = savePdf(id, pendingPdf.dataUrl);
+  if (!ok) return;
+
+  forms.push({ id, title, cat, desc, date: new Date().toLocaleDateString('fr-FR'), size: pendingPdf.size });
+  saveMeta();
+  render(); renderAdmin(); renderStats();
+
+  // reset form
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fDesc').value  = '';
+  document.getElementById('fileName').textContent = '';
+  document.getElementById('progBar').style.display = 'none';
+  document.getElementById('progFill').style.width  = '0%';
+  document.getElementById('fileIn').value = '';
+  pendingPdf = null;
+  toast('✓ Formulaire « ' + title + ' » ajouté avec succès !');
+}
+
+// ── OPEN / CLOSE VIEWER ───────────────────────────────
+function openForm(id) {
+  const f = forms.find(x => x.id === id);
+  if (!f) return;
+  const data = loadPdf(f.id);
+  if (!data) { toast('PDF introuvable — veuillez le re-téléverser.'); return; }
+  curForm = f;
+  document.getElementById('viewerTitle').textContent = f.title;
+  document.getElementById('viewerMeta').textContent  = (CATS[f.cat]||f.cat) + ' · PDF · ' + (f.size||'?') + ' Ko';
+  document.getElementById('pdfViewer').src           = data;
+  const sec = document.getElementById('viewerSection');
+  sec.classList.add('open');
+  sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closeViewer() {
+  document.getElementById('viewerSection').classList.remove('open');
+  document.getElementById('pdfViewer').src = '';
+  curForm = null;
+}
+
+// ── PRINT / DOWNLOAD ──────────────────────────────────
+function printCurrent() {
+  if (!curForm) return;
+  const data = loadPdf(curForm.id);
+  if (!data) return;
+  const w = window.open('', '_blank');
+  if (!w) { toast('Autorisez les pop-ups pour imprimer.'); return; }
+  w.document.write(`<!DOCTYPE html><html><head><style>body,iframe{margin:0;padding:0;width:100%;height:100vh;border:none}</style></head>
+    <body><iframe src="${data}" style="width:100%;height:100vh;border:none"></iframe></body></html>`);
+  w.document.close();
+  setTimeout(() => { try { w.print(); } catch(e){} }, 900);
+}
+
+function downloadCurrent() {
+  if (!curForm) return;
+  const data = loadPdf(curForm.id);
+  if (!data) return;
+  const a = document.createElement('a');
+  a.href = data;
+  a.download = curForm.title.replace(/[^a-z0-9\u00C0-\u024F\s\-_]/gi,'') + '.pdf';
+  a.click();
+}
+
+// ── DELETE ────────────────────────────────────────────
+function deleteForm(id) {
+  const f = forms.find(x => x.id === id);
+  if (!f) return;
+  if (!confirm('Supprimer le formulaire « ' + f.title + ' » ?\nCette action est irréversible.')) return;
+  deletePdf(id);
+  forms = forms.filter(x => x.id !== id);
+  saveMeta();
+  render(); renderAdmin(); renderStats();
+  if (curForm && curForm.id === id) closeViewer();
+  toast('Formulaire supprimé.');
+}
+
+// ── PAGES ─────────────────────────────────────────────
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page + 'Page').classList.add('active');
+  document.getElementById('navHome').classList.toggle('active',  page === 'home');
+  document.getElementById('navAdmin').classList.toggle('active', page === 'admin');
+  if (page === 'admin') { renderAdmin(); renderStats(); }
+}
+
+function toggleAdminMode() {
+  adminMode = !adminMode;
+  document.getElementById('adminToggle').classList.toggle('on', adminMode);
+  toast(adminMode ? 'Mode admin activé' : 'Mode admin désactivé');
+}
+
+// ── DRAG & DROP ───────────────────────────────────────
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('drag'); });
+dz.addEventListener('dragleave', ()  => dz.classList.remove('drag'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if (f) { document.getElementById('fileIn').files = e.dataTransfer.files; handleFile(document.getElementById('fileIn')); }
+});
+
+// ── TOAST ─────────────────────────────────────────────
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── UTILS ─────────────────────────────────────────────
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── INIT ──────────────────────────────────────────────
+loadMeta();
+render();
+</script>
+</body>
+</html>
