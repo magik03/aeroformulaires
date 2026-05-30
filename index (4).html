@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Air Algérie — Portail des formulaires officiels</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const app = initializeApp({
+    apiKey:            "AIzaSyB1T88nLNNSvj9AljsAYwsc4Z-7iJJMEkA",
+    authDomain:        "tous-vos-formulaires.firebaseapp.com",
+    projectId:         "tous-vos-formulaires",
+    storageBucket:     "tous-vos-formulaires.firebasestorage.app",
+    messagingSenderId: "611188125702",
+    appId:             "1:611188125702:web:55dc66a91f707e45b3d387"
+  });
+  const auth = getAuth(app);
+
+  window._signIn  = (e, p) => signInWithEmailAndPassword(auth, e, p);
+  window._signOut = ()     => signOut(auth);
+  onAuthStateChanged(auth, user => {
+    window._currentUser = user || null;
+    if (typeof window._onAuthChange === 'function') window._onAuthChange(user);
+  });
+</script>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy:    #0b2a1a;
+    --navy2:   #0f3520;
+    --navy3:   #143d25;
+    --gold:    #d4001e;
+    --gold2:   #ff2a40;
+    --cream:   #f0f7f2;
+    --muted:   #7a9e89;
+    --danger:  #e24b4a;
+    --danger-bg: rgba(226,75,74,0.10);
+    --danger-bd: rgba(226,75,74,0.22);
+    --bdr:     rgba(212,0,30,0.22);
+    --bdr2:    rgba(212,0,30,0.42);
+    --radius:  12px;
+    --gold-bg: rgba(212,0,30,0.10);
+  }
+
+  body {
+    background: var(--navy);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    font-size: 16px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy2);
+    border-bottom: 1px solid var(--bdr);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .h-inner {
+    max-width: 1120px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 66px; padding: 0 2rem;
+  }
+  .logo { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+  .logo-ico {
+    width: 38px; height: 38px; background: var(--gold);
+    border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .logo-ico svg { width: 22px; height: 22px; fill: #fff; }
+  .logo-name { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--cream); display: block; }
+  .logo-sub  { font-size: 0.62rem; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-top: -1px; }
+  nav { display: flex; align-items: center; gap: 0.2rem; }
+  .nav-link {
+    color: var(--muted); font-size: 0.84rem; text-decoration: none;
+    padding: 6px 14px; border-radius: 7px; transition: all 0.2s; border: none;
+    background: transparent; cursor: pointer; font-family: inherit;
+  }
+  .nav-link:hover { color: var(--cream); background: rgba(255,255,255,0.04); }
+  .nav-link.active { color: var(--cream); background: rgba(200,169,110,0.10); }
+  .nav-admin {
+    margin-left: 0.6rem;
+    background: var(--gold-bg); border: 1px solid var(--bdr);
+    border-radius: 7px; padding: 6px 14px; color: var(--gold);
+    font-size: 0.78rem; cursor: pointer; font-family: inherit;
+    transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+  }
+  .nav-admin:hover { background: rgba(200,169,110,0.18); }
+  .nav-admin.on { background: rgba(200,169,110,0.20); border-color: var(--gold); }
+
+  /* ── PAGES ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--navy2);
+    border-bottom: 1px solid var(--bdr);
+    padding: 4rem 2rem 3rem; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 400px;
+    background: radial-gradient(ellipse, rgba(212,0,30,0.08) 0%, transparent 68%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--gold-bg); border: 1px solid var(--bdr);
+    border-radius: 20px; padding: 5px 14px;
+    font-size: 0.72rem; color: var(--gold); letter-spacing: 0.11em; text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    line-height: 1.18; margin-bottom: 0.8rem; color: var(--cream);
+  }
+  .hero h1 em { color: #d4001e; font-style: normal; }
+  .hero p { color: var(--muted); font-size: 1rem; max-width: 540px; margin: 0 auto 2rem; line-height: 1.75; }
+  .search-wrap { max-width: 460px; margin: 0 auto; position: relative; }
+  .search-wrap input {
+    width: 100%; background: rgba(255,255,255,0.05);
+    border: 1px solid var(--bdr); border-radius: 28px;
+    padding: 11px 44px 11px 20px; color: var(--cream);
+    font-family: inherit; font-size: 0.9rem; outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .search-wrap input:focus { border-color: var(--gold); }
+  .search-ico {
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    width: 17px; height: 17px; fill: none; stroke: var(--muted); stroke-width: 2; pointer-events: none;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main { max-width: 1120px; margin: 0 auto; padding: 2.5rem 2rem 3rem; }
+
+  /* ── FILTERS ── */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 2rem; }
+  .fb {
+    background: transparent; border: 1px solid var(--bdr);
+    border-radius: 20px; padding: 7px 16px;
+    color: var(--muted); font-size: 0.79rem; cursor: pointer;
+    font-family: inherit; transition: all 0.2s; letter-spacing: 0.03em;
+  }
+  .fb:hover { border-color: var(--bdr2); color: var(--cream); }
+  .fb.on { background: var(--gold-bg); border-color: var(--gold); color: var(--gold); }
+
+  /* ── SECTION TITLE ── */
+  .sec-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem; color: var(--cream);
+    margin-bottom: 1.4rem; display: flex; align-items: center; gap: 14px;
+  }
+  .sec-title::after { content: ''; flex: 1; height: 1px; background: var(--bdr); }
+
+  /* ── GRID ── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.1rem; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--navy2); border: 1px solid var(--bdr);
+    border-radius: var(--radius); padding: 1.3rem;
+    cursor: pointer; transition: border-color 0.22s, transform 0.22s;
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.22s;
+  }
+  .card:hover { border-color: var(--bdr2); transform: translateY(-2px); }
+  .card:hover::before { transform: scaleX(1); }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; }
+  .card-ico {
+    width: 42px; height: 42px; background: var(--gold-bg);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .card-ico svg { width: 20px; height: 20px; fill: none; stroke: var(--gold); stroke-width: 1.8; }
+  .badge {
+    font-size: 0.68rem; padding: 3px 10px; border-radius: 10px;
+    letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid;
+  }
+  .badge-gold { background: var(--gold-bg); color: var(--gold); border-color: rgba(212,0,30,0.28); }
+  .badge-blue { background: rgba(0,120,80,0.15); color: #5ecfa0; border-color: rgba(0,120,80,0.30); }
+  .badge-green{ background: rgba(255,180,0,0.12); color: #ffd85c; border-color: rgba(255,180,0,0.28); }
+  .card h3 { font-size: 0.92rem; font-weight: 500; color: var(--cream); margin-bottom: 0.4rem; line-height: 1.42; }
+  .card p  { font-size: 0.79rem; color: var(--muted); line-height: 1.55; flex: 1; }
+  .card-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--bdr);
+  }
+  .card-open { display: flex; align-items: center; gap: 5px; font-size: 0.79rem; color: var(--gold); }
+  .card-open svg { width: 13px; height: 13px; fill: none; stroke: var(--gold); stroke-width: 2.2; transition: transform 0.2s; }
+  .card:hover .card-open svg { transform: translateX(3px); }
+  .card-size { font-size: 0.7rem; color: var(--muted); }
+
+  /* ── VIEWER ── */
+  #viewerSection { display: none; margin-bottom: 2.5rem; }
+  #viewerSection.open { display: block; }
+  .viewer-box {
+    background: var(--navy2); border: 1px solid var(--bdr);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .viewer-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.4rem; border-bottom: 1px solid var(--bdr); gap: 1rem;
+  }
+  .viewer-info { flex: 1; min-width: 0; }
+  .viewer-title { font-weight: 500; font-size: 1rem; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .viewer-meta  { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
+  .viewer-btns  { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .vbtn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 8px;
+    font-family: inherit; font-size: 0.8rem; cursor: pointer; border: none; transition: all 0.2s;
+  }
+  .vbtn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
+  .vbtn-primary { background: #007a3d; color: #fff; font-weight: 500; }
+  .vbtn-primary:hover { opacity: 0.88; }
+  .vbtn-outline { background: transparent; border: 1px solid var(--bdr); color: var(--cream); }
+  .vbtn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .vbtn-close {
+    width: 34px; height: 34px; padding: 0; justify-content: center;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--bdr); color: var(--muted); font-size: 1rem;
+  }
+  .vbtn-close:hover { border-color: var(--gold); color: var(--cream); }
+  #pdfViewer { width: 100%; height: 600px; border: none; display: block; background: #fff; }
+
+  /* ── EMPTY ── */
+  .empty {
+    grid-column: 1/-1; text-align: center; padding: 4rem 2rem;
+    color: var(--muted); font-size: 0.9rem; line-height: 1.8;
+  }
+  .empty svg { width: 44px; height: 44px; fill: none; stroke: var(--muted); stroke-width: 1.4; margin-bottom: 1rem; opacity: 0.5; }
+
+  /* ── ADMIN PAGE ── */
+  .admin-wrap { max-width: 1120px; margin: 0 auto; padding: 2.5rem 2rem 3rem; }
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card {
+    background: var(--navy2); border: 1px solid var(--bdr);
+    border-radius: var(--radius); padding: 1.2rem; text-align: center;
+  }
+  .stat-n { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--gold); }
+  .stat-l { font-size: 0.74rem; color: var(--muted); margin-top: 4px; }
+
+  .upload-panel {
+    background: var(--navy3); border: 1px solid var(--bdr);
+    border-radius: var(--radius); padding: 2rem; margin-bottom: 2.5rem;
+  }
+  .upload-panel h2 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 1.6rem; color: var(--cream); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem; }
+  .form-grid.full { grid-template-columns: 1fr; }
+  .field label { display: block; font-size: 0.77rem; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.04em; }
+  .field input[type=text],
+  .field select,
+  .field textarea {
+    width: 100%; background: rgba(255,255,255,0.05);
+    border: 1px solid var(--bdr); border-radius: 8px;
+    padding: 10px 13px; color: var(--cream);
+    font-family: inherit; font-size: 0.87rem; outline: none;
+    transition: border-color 0.2s;
+  }
+  .field input[type=text]:focus,
+  .field select:focus,
+  .field textarea:focus { border-color: var(--gold); }
+  .field select option { background: var(--navy2); color: var(--cream); }
+  .field textarea { resize: vertical; min-height: 80px; }
+
+  .drop-zone {
+    border: 1.5px dashed rgba(200,169,110,0.30); border-radius: var(--radius);
+    padding: 2.2rem; text-align: center; position: relative;
+    cursor: pointer; transition: all 0.22s;
+  }
+  .drop-zone:hover, .drop-zone.drag { border-color: var(--gold); background: rgba(200,169,110,0.04); }
+  .drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .drop-zone svg { width: 36px; height: 36px; fill: none; stroke: var(--gold); stroke-width: 1.4; margin-bottom: 0.7rem; }
+  .drop-zone p   { font-size: 0.86rem; color: var(--muted); }
+  .drop-zone .fname { font-size: 0.8rem; color: var(--gold); font-weight: 500; margin-top: 0.5rem; }
+
+  .prog-bar { height: 4px; background: rgba(200,169,110,0.12); border-radius: 2px; margin-top: 1rem; overflow: hidden; display: none; }
+  .prog-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.3s; border-radius: 2px; }
+
+  .btn-add {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--gold); color: var(--navy); border: none;
+    border-radius: 9px; padding: 11px 26px;
+    font-family: inherit; font-size: 0.87rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; margin-top: 1.2rem;
+  }
+  .btn-add:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-add svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+  .btn-add:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  /* admin card actions */
+  .card-del {
+    background: var(--danger-bg); border: 1px solid var(--danger-bd);
+    border-radius: 6px; padding: 4px 11px;
+    color: #f09595; font-size: 0.72rem; cursor: pointer;
+    font-family: inherit; transition: all 0.2s;
+  }
+  .card-del:hover { background: rgba(226,75,74,0.2); }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed; bottom: 1.6rem; right: 1.6rem;
+    background: var(--navy2); border: 1px solid var(--gold);
+    border-radius: 10px; padding: 12px 20px;
+    font-size: 0.83rem; color: var(--cream);
+    z-index: 999; transform: translateY(70px); opacity: 0;
+    transition: all 0.3s; pointer-events: none; max-width: 320px;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--bdr); padding: 1.8rem 2rem;
+    text-align: center; color: var(--muted); font-size: 0.78rem;
+  }
+  footer span { color: var(--gold); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .hero h1   { font-size: 1.7rem; }
+    .h-inner   { padding: 0 1rem; }
+    .nav-admin span { display: none; }
+    .main, .admin-wrap { padding: 1.5rem 1rem 2rem; }
+  }
+  @media (max-width: 460px) {
+    .viewer-btns .vbtn-outline { display: none; }
+  }
+
+  /* ── LOGIN OVERLAY ── */
+  #loginOverlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(11,42,26,0.97);
+    align-items: center; justify-content: center;
+  }
+  #loginOverlay.show { display: flex; }
+  .login-box {
+    background: var(--navy2); border: 1px solid var(--bdr);
+    border-radius: 16px; padding: 2.8rem 2.4rem; width: 100%; max-width: 400px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  }
+  .login-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 2rem; justify-content: center; }
+  .login-logo .logo-ico { width: 44px; height: 44px; border-radius: 11px; }
+  .login-box h2 {
+    font-family: 'DM Serif Display', serif; font-size: 1.5rem;
+    text-align: center; margin-bottom: 0.4rem; color: var(--cream);
+  }
+  .login-box .login-sub { text-align: center; font-size: 0.8rem; color: var(--muted); margin-bottom: 2rem; }
+  .login-field { margin-bottom: 1.1rem; }
+  .login-field label { display: block; font-size: 0.77rem; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.04em; }
+  .login-field input {
+    width: 100%; background: rgba(255,255,255,0.05);
+    border: 1px solid var(--bdr); border-radius: 8px;
+    padding: 11px 14px; color: var(--cream);
+    font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.2s;
+  }
+  .login-field input:focus { border-color: var(--gold); }
+  .login-field input::placeholder { color: var(--muted); }
+  .btn-login {
+    width: 100%; background: var(--gold); color: #fff; border: none;
+    border-radius: 9px; padding: 12px; font-family: inherit;
+    font-size: 0.92rem; font-weight: 500; cursor: pointer;
+    transition: all 0.2s; margin-top: 0.5rem;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-login:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-login:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .login-err { color: #f09595; font-size: 0.8rem; text-align: center; margin-top: 1rem; min-height: 1.2em; }
+  .nav-logout {
+    margin-left: 0.4rem;
+    background: var(--danger-bg); border: 1px solid var(--danger-bd);
+    border-radius: 7px; padding: 6px 13px; color: #f09595;
+    font-size: 0.78rem; cursor: pointer; font-family: inherit;
+    transition: all 0.2s; display: none; align-items: center; gap: 5px;
+  }
+  .nav-logout.show { display: flex; }
+  .nav-logout:hover { background: rgba(226,75,74,0.2); }
+
+  /* ── CATEGORY LIST ITEMS ── */
+  .cat-item {
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--bdr);
+    border-radius: 9px; padding: 10px 14px; gap: 1rem;
+  }
+  .cat-item-name { font-size: 0.88rem; color: var(--cream); flex: 1; }
+  .cat-item-key  { font-size: 0.72rem; color: var(--muted); font-family: monospace; }
+  .cat-item-btns { display: flex; gap: 6px; }
+  .btn-cat-edit {
+    background: rgba(212,0,30,0.10); border: 1px solid rgba(212,0,30,0.25);
+    border-radius: 6px; padding: 5px 12px; color: var(--gold);
+    font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: all 0.2s;
+  }
+  .btn-cat-edit:hover { background: rgba(212,0,30,0.2); }
+  .btn-cat-del {
+    background: var(--danger-bg); border: 1px solid var(--danger-bd);
+    border-radius: 6px; padding: 5px 12px; color: #f09595;
+    font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: all 0.2s;
+  }
+  .btn-cat-del:hover { background: rgba(226,75,74,0.22); }
+
+  /* ── EDIT MODAL ── */
+  #editModal {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(11,42,26,0.92); align-items: center; justify-content: center;
+  }
+  #editModal.show { display: flex; }
+  .modal-box {
+    background: var(--navy2); border: 1px solid var(--bdr);
+    border-radius: 14px; padding: 2rem; width: 100%; max-width: 380px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  }
+  .modal-box h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; margin-bottom: 1.4rem; color: var(--cream); }
+  .modal-btns { display: flex; gap: 8px; margin-top: 1.4rem; }
+  .btn-modal-save {
+    flex: 1; background: var(--gold); color: #fff; border: none;
+    border-radius: 8px; padding: 10px; font-family: inherit;
+    font-size: 0.87rem; font-weight: 500; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-modal-save:hover { opacity: 0.88; }
+  .btn-modal-cancel {
+    flex: 1; background: transparent; border: 1px solid var(--bdr);
+    border-radius: 8px; padding: 10px; color: var(--muted);
+    font-family: inherit; font-size: 0.87rem; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-modal-cancel:hover { border-color: var(--bdr2); color: var(--cream); }
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- LOGIN OVERLAY -->
+<div id="loginOverlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="logo-ico" style="width:44px;height:44px;background:var(--gold);border-radius:11px;display:flex;align-items:center;justify-content:center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+      </div>
+    </div>
+    <h2>Administration</h2>
+    <p class="login-sub">Air Algérie — Accès réservé</p>
+    <div class="login-field">
+      <label>Adresse e-mail</label>
+      <input type="email" id="loginEmail" placeholder="admin@airalgerie.dz" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="login-field">
+      <label>Mot de passe</label>
+      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-login" id="btnLogin" onclick="doLogin()">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Se connecter
+    </button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- EDIT CATEGORY MODAL -->
+<div id="editModal">
+  <div class="modal-box">
+    <h3>Modifier la catégorie</h3>
+    <div class="field">
+      <label>Nouveau nom</label>
+      <input type="text" id="editCatName" maxlength="40" onkeydown="if(event.key==='Enter')saveEditCat()">
+    </div>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="closeEditModal()">Annuler</button>
+      <button class="btn-modal-save"   onclick="saveEditCat()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="h-inner">
+    <a class="logo" href="#" onclick="showPage('home');return false;">
+      <div class="logo-ico">
+        <svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+      </div>
+      <div>
+        <span class="logo-name">Air Algérie</span>
+        <span class="logo-sub">Portail officiel des formulaires</span>
+      </div>
+    </a>
+    <nav>
+      <button class="nav-link active" id="navHome" onclick="showPage('home')">Formulaires</button>
+      <button class="nav-link" id="navAdmin" onclick="goAdmin()">Administration</button>
+      <button class="nav-admin" id="adminToggle" onclick="toggleAdminMode()" title="Activer le mode suppression">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+        <span>Mode admin</span>
+      </button>
+      <button class="nav-logout" id="navLogout" onclick="doLogout()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Déconnexion
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- HOME PAGE -->
+<div class="page active" id="homePage">
+  <div class="hero">
+    <div class="hero-badge">
+      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Documents officiels — Accès rapide
+    </div>
+    <h1>Tous vos <em>formulaires</em><br>Air Algérie</h1>
+    <p>Consultez, remplissez et imprimez tous les formulaires officiels directement depuis votre navigateur — sans téléchargement requis.</p>
+    <div class="search-wrap">
+      <input type="text" id="searchIn" placeholder="Rechercher un formulaire..." oninput="render()">
+      <svg class="search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- PDF VIEWER -->
+    <div id="viewerSection">
+      <div class="viewer-box">
+        <div class="viewer-header">
+          <div class="viewer-info">
+            <div class="viewer-title" id="viewerTitle">Formulaire</div>
+            <div class="viewer-meta" id="viewerMeta"></div>
+          </div>
+          <div class="viewer-btns">
+            <button class="vbtn vbtn-outline" onclick="downloadCurrent()">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Télécharger
+            </button>
+            <button class="vbtn vbtn-primary" onclick="printCurrent()">
+              <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Imprimer
+            </button>
+            <button class="vbtn vbtn-close" onclick="closeViewer()">✕</button>
+          </div>
+        </div>
+        <iframe id="pdfViewer" title="Aperçu du formulaire PDF"></iframe>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters" id="filterBtns"></div>
+
+    <div class="sec-title">Formulaires disponibles</div>
+    <div class="grid" id="formsGrid"></div>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div class="page" id="adminPage">
+  <div class="admin-wrap">
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="upload-panel">
+      <h2>Ajouter un nouveau formulaire</h2>
+      <div class="form-grid">
+        <div class="field">
+          <label>Titre du formulaire *</label>
+          <input type="text" id="fTitle" placeholder="Ex : Décharge de responsabilité adulte">
+        </div>
+        <div class="field">
+          <label>Catégorie *</label>
+          <select id="fCat"></select>
+        </div>
+      </div>
+      <div class="form-grid full">
+        <div class="field">
+          <label>Description courte</label>
+          <textarea id="fDesc" placeholder="Description brève visible sur la carte..."></textarea>
+        </div>
+      </div>
+      <div class="form-grid full">
+        <div class="field">
+          <label>Fichier PDF *</label>
+          <div class="drop-zone" id="dropZone">
+            <input type="file" accept=".pdf" id="fileIn" onchange="handleFile(this)">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <p>Glissez votre PDF ici ou cliquez pour sélectionner</p>
+            <div class="fname" id="fileName"></div>
+          </div>
+          <div class="prog-bar" id="progBar"><div class="prog-fill" id="progFill"></div></div>
+        </div>
+      </div>
+      <button class="btn-add" id="btnAdd" onclick="addForm()">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Ajouter le formulaire
+      </button>
+    </div>
+
+    <div class="sec-title">Formulaires enregistrés</div>
+    <div class="grid" id="adminGrid"></div>
+
+    <!-- CATEGORIES MANAGEMENT -->
+    <div class="sec-title" style="margin-top:2.5rem">Gestion des catégories</div>
+    <div class="upload-panel" id="catsPanel">
+      <div class="form-grid" style="align-items:flex-end">
+        <div class="field">
+          <label>Nom de la catégorie *</label>
+          <input type="text" id="catName" placeholder="Ex : Bagages spéciaux" maxlength="40">
+        </div>
+        <div>
+          <button class="btn-add" style="margin-top:0" onclick="addCat()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            Ajouter
+          </button>
+        </div>
+      </div>
+      <div id="catsList" style="margin-top:1.4rem;display:flex;flex-direction:column;gap:0.6rem"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Air Algérie &nbsp;·&nbsp; Tous droits réservés &nbsp;·&nbsp;
+  <span>Portail officiel des formulaires aéroportuaires</span>
+</footer>
+
+<script>
+// ── GITHUB CONFIG ─────────────────────────────────────
+const GH_TOKEN  = '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';
+const GH_OWNER  = 'magik03';
+const GH_REPO   = 'aeroformulaires';
+const GH_BRANCH = 'main';
+const GH_API    = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents`;
+const GH_RAW    = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}`;
+
+// ── DATA ──────────────────────────────────────────────
+const BADGE_POOL = ['badge-gold','badge-blue','badge-green'];
+let CATS        = {};
+let BADGE_CLASS = {};
+let forms       = [];
+let curFilter   = 'all';
+let curForm     = null;
+let adminMode   = false;
+let pendingPdf  = null;
+let _dataSha    = {}; // stores SHA for each file (needed for GitHub updates)
+
+// ── GITHUB HELPERS ────────────────────────────────────
+const ghHeaders = () => ({
+  'Authorization': `token ${GH_TOKEN}`,
+  'Content-Type':  'application/json',
+  'Accept':        'application/vnd.github+json'
+});
+
+async function ghGet(path) {
+  const r = await fetch(`${GH_API}/${path}`, { headers: ghHeaders() });
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error(`GitHub GET erreur ${r.status}`);
+  return r.json();
+}
+
+async function ghPut(path, contentB64, sha, message) {
+  const body = { message, content: contentB64, branch: GH_BRANCH };
+  if (sha) body.sha = sha;
+  const r = await fetch(`${GH_API}/${path}`, {
+    method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body)
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message || `GitHub PUT erreur ${r.status}`); }
+  const data = await r.json();
+  if (data.content) _dataSha[path] = data.content.sha;
+  return data;
+}
+
+async function ghDelete(path, sha, message) {
+  const r = await fetch(`${GH_API}/${path}`, {
+    method: 'DELETE', headers: ghHeaders(),
+    body: JSON.stringify({ message, sha, branch: GH_BRANCH })
+  });
+  if (!r.ok) throw new Error(`GitHub DELETE erreur ${r.status}`);
+}
+
+// ── DATA.JSON — formulaires + catégories ─────────────
+async function loadData() {
+  try {
+    const file = await ghGet('data.json');
+    if (file) {
+      _dataSha['data.json'] = file.sha;
+      const parsed = JSON.parse(atob(file.content.replace(/\n/g,'')));
+      forms       = parsed.forms       || [];
+      CATS        = parsed.cats        || {};
+      BADGE_CLASS = parsed.badgeClass  || {};
+    }
+  } catch(e) { console.warn('loadData:', e); }
+  // seed defaults si vide
+  if (!Object.keys(CATS).length) {
+    CATS = { discharge:'Décharge adulte', infant:'Nourrisson / Bébé', transport:'Transport enfant', airport:'Aéroport général', autre:'Autre' };
+    BADGE_CLASS = { discharge:'badge-gold', infant:'badge-blue', transport:'badge-green', airport:'badge-gold', autre:'badge-gold' };
+  }
+}
+
+async function saveData(message='Mise à jour data.json') {
+  const content = btoa(unescape(encodeURIComponent(
+    JSON.stringify({ forms, cats: CATS, badgeClass: BADGE_CLASS }, null, 2)
+  )));
+  await ghPut('data.json', content, _dataSha['data.json'] || null, message);
+}
+
+// ── PDF — upload / delete ─────────────────────────────
+async function uploadPdf(filename, base64Data) {
+  // base64Data is full dataURL — extract pure base64
+  const b64 = base64Data.split(',')[1];
+  const path = `pdfs/${filename}`;
+  const existing = await ghGet(path);
+  const sha = existing ? existing.sha : null;
+  await ghPut(path, b64, sha, `Upload PDF: ${filename}`);
+  return `${GH_RAW}/${path}`;
+}
+
+async function deletePdfFile(filename) {
+  const path = `pdfs/${filename}`;
+  try {
+    const file = await ghGet(path);
+    if (file) await ghDelete(path, file.sha, `Suppression PDF: ${filename}`);
+  } catch(e) { console.warn('deletePdfFile:', e); }
+}
+
+function rebuildCatSelect() {
+  const sel = document.getElementById('fCat');
+  if (!sel) return;
+  sel.innerHTML = Object.entries(CATS).map(([k,v]) => `<option value="${k}">${v}</option>`).join('');
+}
+function rebuildFilterBtns() {
+  const wrap = document.getElementById('filterBtns');
+  if (!wrap) return;
+  wrap.innerHTML = `<button class="fb on" onclick="setFilter('all',this)">Tous les formulaires</button>` +
+    Object.entries(CATS).map(([k,v]) => `<button class="fb" onclick="setFilter('${k}',this)">${v}</button>`).join('');
+}
+
+// ── RENDER HOME GRID ──────────────────────────────────
+function render() {
+  const q = (document.getElementById('searchIn').value || '').toLowerCase();
+  const list = forms.filter(f => {
+    const mc = curFilter === 'all' || f.cat === curFilter;
+    const ms = !q || f.title.toLowerCase().includes(q) || (f.desc||'').toLowerCase().includes(q);
+    return mc && ms;
+  });
+  const g = document.getElementById('formsGrid');
+  if (!list.length) {
+    g.innerHTML = `<div class="empty">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <br>Aucun formulaire trouvé.<br>
+      <span style="font-size:.82rem">Ajoutez-en depuis la page <strong>Administration</strong>.</span>
+    </div>`;
+    return;
+  }
+  g.innerHTML = list.map(f => `
+    <div class="card" onclick="openForm('${f.id}')">
+      <div class="card-top">
+        <div class="card-ico">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <span class="badge ${BADGE_CLASS[f.cat]||'badge-gold'}">${CATS[f.cat]||f.cat}</span>
+      </div>
+      <h3>${escHtml(f.title)}</h3>
+      <p>${escHtml(f.desc || 'Formulaire officiel — cliquez pour ouvrir et imprimer.')}</p>
+      <div class="card-foot">
+        <span class="card-open">
+          Ouvrir dans nouvel onglet
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+        <span class="card-size">${f.size ? f.size + ' Ko' : 'PDF'}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── RENDER ADMIN GRID ─────────────────────────────────
+function renderAdmin() {
+  const g = document.getElementById('adminGrid');
+  if (!forms.length) {
+    g.innerHTML = '<div class="empty">Aucun formulaire enregistré. Ajoutez-en ci-dessus.</div>';
+    return;
+  }
+  g.innerHTML = forms.map(f => `
+    <div class="card" style="cursor:default">
+      <div class="card-top">
+        <div class="card-ico">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <span class="badge ${BADGE_CLASS[f.cat]||'badge-gold'}">${CATS[f.cat]||f.cat}</span>
+      </div>
+      <h3>${escHtml(f.title)}</h3>
+      <p style="font-size:.75rem;color:var(--muted)">Ajouté le ${f.date||'—'} · ${f.size||'?'} Ko</p>
+      <div class="card-foot">
+        <button onclick="openForm('${f.id}')" style="background:transparent;border:none;color:var(--gold);font-size:.79rem;cursor:pointer;font-family:inherit;padding:0">
+          Prévisualiser →
+        </button>
+        <button class="card-del" data-delid="${f.id}" onclick="deleteForm('${f.id}')">Supprimer</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderStats() {
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card"><div class="stat-n">${forms.length}</div><div class="stat-l">Formulaires total</div></div>
+    <div class="stat-card"><div class="stat-n">${Object.keys(CATS).length}</div><div class="stat-l">Catégories</div></div>
+    <div class="stat-card"><div class="stat-n">${forms.filter(f=>f.cat==='transport').length}</div><div class="stat-l">Transport enfant</div></div>
+    <div class="stat-card"><div class="stat-n">${forms.filter(f=>f.cat==='airport'||f.cat==='autre').length}</div><div class="stat-l">Aéroport / Autre</div></div>
+  `;
+}
+
+// ── CATEGORY MANAGEMENT ───────────────────────────────
+function renderCatsList() {
+  const el = document.getElementById('catsList');
+  if (!el) return;
+  const entries = Object.entries(CATS);
+  if (!entries.length) { el.innerHTML = '<p style="color:var(--muted);font-size:.82rem">Aucune catégorie.</p>'; return; }
+  el.innerHTML = entries.map(([k, v]) => `
+    <div class="cat-item">
+      <div>
+        <span class="cat-item-name">${escHtml(v)}</span>
+        <span class="cat-item-key"> &nbsp;·&nbsp; <code style="font-size:.7rem;color:var(--muted)">${k}</code></span>
+      </div>
+      <div class="cat-item-btns">
+        <button class="btn-cat-edit" onclick="openEditCat('${k}')">✏ Modifier</button>
+        <button class="btn-cat-del"  onclick="deleteCat('${k}')">✕ Supprimer</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function addCat() {
+  const name = document.getElementById('catName').value.trim();
+  if (!name) { toast('Entrez un nom de catégorie.'); return; }
+  const key = 'cat_' + Date.now();
+  CATS[key] = name;
+  BADGE_CLASS[key] = BADGE_POOL[Object.keys(CATS).length % BADGE_POOL.length];
+  try {
+    await saveData(`Ajout catégorie: ${name}`);
+    rebuildCatSelect(); rebuildFilterBtns(); renderCatsList();
+    document.getElementById('catName').value = '';
+    toast('✓ Catégorie « ' + name + ' » ajoutée.');
+  } catch(e) {
+    delete CATS[key]; delete BADGE_CLASS[key];
+    toast('⚠ Erreur : ' + e.message);
+  }
+}
+
+async function deleteCat(key) {
+  const inUse = forms.some(f => f.cat === key);
+  if (inUse) { toast('⚠ Impossible — des formulaires utilisent cette catégorie.'); return; }
+  if (!confirm('Supprimer la catégorie « ' + CATS[key] + ' » ?')) return;
+  const oldName = CATS[key];
+  delete CATS[key]; delete BADGE_CLASS[key];
+  try {
+    await saveData(`Suppression catégorie: ${oldName}`);
+    rebuildCatSelect(); rebuildFilterBtns(); renderCatsList();
+    toast('Catégorie supprimée.');
+  } catch(e) {
+    CATS[key] = oldName;
+    toast('⚠ Erreur : ' + e.message);
+  }
+}
+
+let _editKey = null;
+function openEditCat(key) {
+  _editKey = key;
+  document.getElementById('editCatName').value = CATS[key] || '';
+  document.getElementById('editModal').classList.add('show');
+  setTimeout(() => document.getElementById('editCatName').focus(), 80);
+}
+function closeEditModal() {
+  document.getElementById('editModal').classList.remove('show');
+  _editKey = null;
+}
+async function saveEditCat() {
+  const name = document.getElementById('editCatName').value.trim();
+  if (!name || !_editKey) { toast('Entrez un nom.'); return; }
+  const oldName = CATS[_editKey];
+  CATS[_editKey] = name;
+  try {
+    await saveData(`Modification catégorie: ${name}`);
+    rebuildCatSelect(); rebuildFilterBtns(); renderCatsList(); render(); renderAdmin();
+    closeEditModal();
+    toast('✓ Catégorie renommée en « ' + name + ' ».');
+  } catch(e) {
+    CATS[_editKey] = oldName;
+    toast('⚠ Erreur : ' + e.message);
+  }
+}
+
+// ── FILTER ────────────────────────────────────────────
+function setFilter(cat, btn) {
+  curFilter = cat;
+  document.querySelectorAll('.fb').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+}
+
+// ── FILE HANDLING ─────────────────────────────────────
+function handleFile(inp) {
+  const f = inp.files[0];
+  if (!f) return;
+  if (f.type !== 'application/pdf') { toast('Veuillez sélectionner un fichier PDF.'); return; }
+  if (f.size > 20 * 1024 * 1024) { toast('Fichier trop grand — maximum 20 Mo.'); inp.value=''; return; }
+  document.getElementById('fileName').textContent = f.name + '  (' + Math.round(f.size/1024) + ' Ko)';
+  const pb = document.getElementById('progBar');
+  const pf = document.getElementById('progFill');
+  pb.style.display = 'block'; pf.style.width = '0%';
+  const reader = new FileReader();
+  reader.onprogress = e => { if(e.lengthComputable) pf.style.width = Math.round(e.loaded/e.total*100)+'%'; };
+  reader.onload = e => {
+    pendingPdf = { dataUrl: e.target.result, name: f.name, size: Math.round(f.size/1024) };
+    pf.style.width = '100%';
+    toast('✓ PDF chargé — prêt à enregistrer.');
+  };
+  reader.onerror = () => toast('Erreur de lecture du fichier.');
+  reader.readAsDataURL(f);
+}
+
+// ── ADD FORM ──────────────────────────────────────────
+async function addForm() {
+  const title = document.getElementById('fTitle').value.trim();
+  const cat   = document.getElementById('fCat').value;
+  const desc  = document.getElementById('fDesc').value.trim();
+  if (!title)      { toast('Veuillez saisir un titre.'); return; }
+  if (!pendingPdf) { toast('Veuillez sélectionner un PDF.'); return; }
+
+  const btn = document.getElementById('btnAdd');
+  btn.disabled = true;
+  btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> Envoi en cours…`;
+
+  try {
+    const id       = 'f_' + Date.now();
+    const filename = id + '_' + pendingPdf.name.replace(/[^a-z0-9._-]/gi, '_');
+    toast('⬆ Envoi du PDF vers GitHub…');
+    const pdfUrl = await uploadPdf(filename, pendingPdf.dataUrl);
+    forms.push({ id, title, cat, desc, date: new Date().toLocaleDateString('fr-FR'), size: pendingPdf.size, filename, pdfUrl });
+    toast('💾 Mise à jour des données…');
+    await saveData(`Ajout formulaire: ${title}`);
+    render(); renderAdmin(); renderStats();
+    // reset
+    document.getElementById('fTitle').value = '';
+    document.getElementById('fDesc').value  = '';
+    document.getElementById('fileName').textContent = '';
+    document.getElementById('progBar').style.display = 'none';
+    document.getElementById('progFill').style.width  = '0%';
+    document.getElementById('fileIn').value = '';
+    pendingPdf = null;
+    toast('✓ Formulaire « ' + title + ' » ajouté avec succès !');
+  } catch(e) {
+    toast('⚠ Erreur : ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Ajouter le formulaire`;
+  }
+}
+
+// ── OPEN FORM ─────────────────────────────────────────
+function openForm(id) {
+  const f = forms.find(x => x.id === id);
+  if (!f) return;
+  const url = f.pdfUrl || (f.filename ? `${GH_RAW}/pdfs/${f.filename}` : null);
+  if (!url) { toast('PDF introuvable.'); return; }
+  const win = window.open('', '_blank');
+  if (!win) { toast('Autorisez les pop-ups pour ouvrir le PDF.'); return; }
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${escHtml(f.title)}</title>
+    <style>*{margin:0;padding:0}html,body{width:100%;height:100%;overflow:hidden}iframe{width:100%;height:100%;border:none;display:block}</style>
+    </head><body><iframe src="${url}"></iframe></body></html>`);
+  win.document.close();
+}
+
+function closeViewer() {
+  document.getElementById('viewerSection').classList.remove('open');
+  curForm = null;
+}
+
+// ── PRINT / DOWNLOAD (non utilisé — PDF ouvre dans nouvel onglet) ──
+
+// ── DELETE ────────────────────────────────────────────
+async function deleteForm(id) {
+  const f = forms.find(x => x.id === id);
+  if (!f) return;
+  if (!confirm('Supprimer le formulaire « ' + f.title + ' » ?\nCette action est irréversible.')) return;
+  const btn = document.querySelector(`[data-delid="${id}"]`);
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+  try {
+    if (f.filename) {
+      toast('🗑 Suppression du PDF sur GitHub…');
+      await deletePdfFile(f.filename);
+    }
+    forms = forms.filter(x => x.id !== id);
+    toast('💾 Mise à jour des données…');
+    await saveData(`Suppression formulaire: ${f.title}`);
+    render(); renderAdmin(); renderStats();
+    toast('Formulaire supprimé.');
+  } catch(e) {
+    toast('⚠ Erreur : ' + e.message);
+  }
+}
+
+// ── PAGES ─────────────────────────────────────────────
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page + 'Page').classList.add('active');
+  document.getElementById('navHome').classList.toggle('active',  page === 'home');
+  document.getElementById('navAdmin').classList.toggle('active', page === 'admin');
+  if (page === 'admin') { renderAdmin(); renderStats(); renderCatsList(); }
+}
+
+function goAdmin() {
+  if (window._currentUser) {
+    showPage('admin');
+  } else {
+    showLogin();
+  }
+}
+
+function toggleAdminMode() {
+  adminMode = !adminMode;
+  document.getElementById('adminToggle').classList.toggle('on', adminMode);
+  toast(adminMode ? 'Mode admin activé' : 'Mode admin désactivé');
+}
+
+// ── FIREBASE AUTH ──────────────────────────────────────
+function showLogin() {
+  document.getElementById('loginOverlay').classList.add('show');
+  document.getElementById('loginEmail').focus();
+  document.getElementById('loginErr').textContent = '';
+}
+function hideLogin() {
+  document.getElementById('loginOverlay').classList.remove('show');
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPass').value  = '';
+  document.getElementById('loginErr').textContent = '';
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const btn   = document.getElementById('btnLogin');
+  const err   = document.getElementById('loginErr');
+  if (!email || !pass) { err.textContent = 'Veuillez remplir tous les champs.'; return; }
+  btn.disabled = true; btn.textContent = 'Connexion…';
+  try {
+    await window._signIn(email, pass);
+    hideLogin();
+    showPage('admin');
+  } catch(e) {
+    const msgs = {
+      'auth/invalid-credential':    'Email ou mot de passe incorrect.',
+      'auth/user-not-found':        'Aucun compte trouvé.',
+      'auth/wrong-password':        'Mot de passe incorrect.',
+      'auth/too-many-requests':     'Trop de tentatives. Réessayez plus tard.',
+      'auth/invalid-email':         'Adresse e-mail invalide.'
+    };
+    err.textContent = msgs[e.code] || 'Erreur : ' + e.message;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Se connecter';
+  }
+}
+
+async function doLogout() {
+  await window._signOut();
+  showPage('home');
+  toast('Déconnecté avec succès.');
+}
+
+window._onAuthChange = function(user) {
+  const logoutBtn = document.getElementById('navLogout');
+  if (user) {
+    logoutBtn.classList.add('show');
+  } else {
+    logoutBtn.classList.remove('show');
+    // if on admin page, go back to home
+    if (document.getElementById('adminPage').classList.contains('active')) {
+      showPage('home');
+    }
+  }
+};
+
+// ── DRAG & DROP ───────────────────────────────────────
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover',  e => { e.preventDefault(); dz.classList.add('drag'); });
+dz.addEventListener('dragleave', ()  => dz.classList.remove('drag'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if (f) { document.getElementById('fileIn').files = e.dataTransfer.files; handleFile(document.getElementById('fileIn')); }
+});
+
+// ── TOAST ─────────────────────────────────────────────
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── UTILS ─────────────────────────────────────────────
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── INIT ──────────────────────────────────────────────
+(async () => {
+  toast('⏳ Chargement des données…');
+  await loadData();
+  rebuildCatSelect();
+  rebuildFilterBtns();
+  render();
+  toast('✓ Données chargées.');
+})();
+</script>
+</body>
+</html>
